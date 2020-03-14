@@ -56,6 +56,53 @@ app.post('/api/productos',(req,res)=>{
 
 })
 
+app.put('/api/productos/:id', (req, res) => {
+    let id = req.params.id;
+  
+    let body = req.body;
+  
+    Product.findByIdAndUpdate(id, body, { new: true }, (err, product) => {
+      if (err) {
+        return res.status(400).json({
+          ok: false,
+          err
+        });
+      }
+  
+      res.json({
+        ok: true,
+        product
+      });
+    });
+  });
+  
+  app.delete('/api/productos/:id', (req, res) => {
+    let id = req.params.id;
+  
+    Product.findByIdAndDelete(id, (err, productBorrado) => {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          err
+        });
+      }
+  
+      if (!productBorrado) {
+        return res.status(400).json({
+          ok: false,
+          err: { message: 'El producto no existe' }
+        });
+      }
+  
+      res.json({
+        ok: true,
+        producto: productBorrado,
+        mensaje: 'Producto borrado'
+      });
+    });
+  });
+  
+
 
 mongoose.connect('mongodb+srv://jurgensen:<374374abcdin>@cluster0-agbzi.mongodb.net/test?retryWrites=true&w=majority',(err,res)=>{
 
